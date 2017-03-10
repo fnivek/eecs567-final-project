@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Globals
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Source the default bash
+. "${DIR}/default-bash.sh"
+
+################################
+# Prints usage 
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+################################
+print_usage() {
+  printf "Usage: $0 [options]
+    \t-h\t Display this help
+    \t-v\t Set verbosity [0: silent, 1: info, 2: max] default 1
+    "
+  exit 0
+}
+
+# Command line parse
+while getopts ':v:' flag; do
+  case "${flag}" in
+    v) VERBOSITY="${OPTARG}" ;;
+    *) print_usage ;;
+  esac
+done
+
+# Install script dependencies
+info "Installing script dependencies"
+sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa &> /dev/null
+sudo apt update -qq
+sudo apt install -qq wget git &> /dev/null
+
+# Grab the arm toolchain
+info "Installing arm toolchain"
+sudo apt install -qq gcc-arm-embedded &> /dev/null
+
+# Install stlink
+info "Installing stlink"
+debug "Install dependencies"
+sudo apt install -qq build-essential cmake libusb-1.0-0-dev &> /dev/null
+debug "Clone repo and switch to version 1.3.1"
+tmp_dir="$(mktemp -d)"
+git clone -q https://github.com/texane/stlink.git "${tmp_dir}"
+cd "${tmp_dir}"
+git checkout -q tags/1.3.1
+debug "Make"
+make -s release &> /dev/null
+debug "Install"
+cd build/Release
+sudo make -s install &> /dev/null
+debug "Update ld cache"
+sudo ldconfig
+
+info "Installation complete"
