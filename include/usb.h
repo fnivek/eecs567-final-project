@@ -54,5 +54,7 @@ void SetupUsb(void);
 void UsbPoll(void);
 void UsbWriteString(const char* buf);
 int8_t is_usb_ready(void);
+void UsbAddReadCallback(void (*callback)(void* buf, uint16_t len));
+void UsbDefaultReadCallback(void* buf, uint16_t len);
 
 #endif

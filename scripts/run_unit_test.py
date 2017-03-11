@@ -22,18 +22,18 @@ while True:
         ser = serial.Serial("/dev/serial/by-id/usb-eecs567_final_project-if00", 115200)
         break
     except Exception as e:
-        print 'Failed to connect to device waiting 1 seconds then trying again'
+        print 'Failed to connect to device waiting 3 seconds then trying again'
         print e
         tries += 1
         if tries >= 10:
             print 'Failed to connect to device 10 times exiting now'
             sys.exit()
 
-        time.sleep(1)
+        time.sleep(3)
 
 # Send data to start USB OTG
-print 'Write start'
-ser.write("start")
+print 'Write next'
+ser.write("next")
 
 print 'Run test'
 # Read until we see the finished text

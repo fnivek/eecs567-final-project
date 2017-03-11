@@ -7,6 +7,9 @@
 uint8_t USB_READY;
 usbd_device *usbd_dev;
 
+// Read callback function pointer
+void (*read_callback)(void* buf, uint16_t len);
+
 /*
  *			Definitions
  */
@@ -172,8 +175,11 @@ void CDCACMDataRxCb(usbd_device *usbd_dev, uint8_t ep)
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
 	if (len) {
 		USB_READY = 1;
-		// TODO: Write a read function
-		while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
+		
+		// Call the read callback
+		if(read_callback != 0) {
+			read_callback(buf, len);
+		}
 	}
 }
 void CDCACMSetConfig(usbd_device *usbd_dev, uint16_t wValue)
@@ -213,10 +219,6 @@ void SetupUsb(void)
 			usbd_control_buffer, sizeof(usbd_control_buffer));
 
 	usbd_register_set_config_callback(usbd_dev, CDCACMSetConfig);
-
-	// Set up to poll every millisecond
-	// Temp solution to polling to slow
-	// AddSystickCallback(UsbPoll, 1);
 }
 
 void UsbPoll(void)
@@ -238,9 +240,21 @@ int8_t is_usb_ready(void)
 }
 
 
+void UsbAddReadCallback(void (*callback)(void* buf, uint16_t len)) {
+	read_callback = callback;
+}
+
+/*
+ * Default read callback just echos the data back
+ */
+void UsbDefaultReadCallback(void* buf, uint16_t len) {
+	while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
+}
+
 /*
  * Global variables
  */
 
 uint8_t USB_READY = 0;
 usbd_device *usbd_dev = NULL;
+void (*read_callback)(void* buf, uint16_t len) = UsbDefaultReadCallback;
