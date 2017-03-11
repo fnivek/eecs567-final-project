@@ -15,10 +15,21 @@ raw_input("""\nPlease press the phsyical reset button on
            the STM32F4Discovery board and then press enter to continue...""")
 
 # Open a serial port
-time.sleep(1)
 print 'Connecting to /dev/serial/by-id/usb-eecs567_final_project-if00'
-ser = serial.Serial("/dev/serial/by-id/usb-eecs567_final_project-if00", 115200)
-# time.sleep(1)
+tries = 0
+while True:
+    try:
+        ser = serial.Serial("/dev/serial/by-id/usb-eecs567_final_project-if00", 115200)
+        break
+    except Exception as e:
+        print 'Failed to connect to device waiting 1 seconds then trying again'
+        print e
+        tries += 1
+        if tries >= 10:
+            print 'Failed to connect to device 10 times exiting now'
+            sys.exit()
+
+        time.sleep(1)
 
 # Send data to start USB OTG
 print 'Write start'
