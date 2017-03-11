@@ -6,12 +6,13 @@ import sys
 import time
 
 # Make and flash the unit test
-FILE_LOCATION =  os.path.dirname(os.path.abspath(__file__))
+FILE_LOCATION = os.path.dirname(os.path.abspath(__file__))
 os.chdir(FILE_LOCATION + "/../")
 print os.system("make flash_unit_test")
 
 # Ask the user to reset the board
-raw_input("\nPlease press the phsyical reset button on the STM32F4Discovery board and then press enter to continue...")
+raw_input("""\nPlease press the phsyical reset button on
+           the STM32F4Discovery board and then press enter to continue...""")
 
 # Open a serial port
 time.sleep(1)
@@ -40,6 +41,5 @@ try:
             if result.find("Finished") != -1:
                 break
 finally:
-    # Print the result so the user can see and close the serial port
-    #print result
+    # Close the serial port
     ser.close()
