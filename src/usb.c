@@ -172,6 +172,7 @@ void CDCACMDataRxCb(usbd_device *usbd_dev, uint8_t ep)
 	int len = usbd_ep_read_packet(usbd_dev, 0x01, buf, 64);
 	if (len) {
 		USB_READY = 1;
+		// TODO: Write a read function
 		while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
 	}
 }

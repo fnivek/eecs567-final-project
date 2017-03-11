@@ -9,5 +9,7 @@
 #include "debug_leds.h"
 
 void SetupBoard(void);
+void Run(void);
+void RunOnce(void);
 
 #endif

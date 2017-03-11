@@ -9,3 +9,15 @@ void SetupBoard(void) {
 	SetupUsb();
 	SetupSystick();
 }
+
+void Run(void) {
+	// Infinite loop
+	while(true) {
+		RunOnce();
+	}
+}
+
+void RunOnce(void) {
+	// Poll usb
+	UsbPoll();
+}
