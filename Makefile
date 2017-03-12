@@ -72,20 +72,23 @@ LD_FLAGS += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 # Targets: Actions
 ############################################################
 .SUFFIXES: .c .eep .h .hex .o .elf .s .S
-.PHONY: all bin elf flash clean unit_test libopencm3
+.PHONY: all bin elf flash clean unit_test libopencm3 build_dir
 
-all: elf
+all: build_dir elf
 
-elf: $(BUILD_DIR)/$(PROJECT).elf
+build_dir:
+	@mkdir -p build
 
-bin: $(BUILD_DIR)/$(PROJECT).bin
+elf: build_dir $(BUILD_DIR)/$(PROJECT).elf
 
-unit_test: $(BUILD_DIR)/$(PROJECT)_unit_test.bin
+bin: build_dir $(BUILD_DIR)/$(PROJECT).bin
 
-flash: $(BUILD_DIR)/$(PROJECT).bin
+unit_test: build_dir $(BUILD_DIR)/$(PROJECT)_unit_test.bin
+
+flash: build_dir $(BUILD_DIR)/$(PROJECT).bin
 	$(STFLASH) write $< 0x08000000
 
-flash_unit_test: $(BUILD_DIR)/$(PROJECT)_unit_test.bin
+flash_unit_test: build_dir $(BUILD_DIR)/$(PROJECT)_unit_test.bin
 	$(STFLASH) write $< 0x08000000
 
 erase:
