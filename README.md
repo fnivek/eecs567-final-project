@@ -15,7 +15,7 @@ There is an instilation script provided for doing devolopment on Linux systems.
 Simply run the below command from the root of the project.
 
 ```bash
-./instal
+./install
 ```
 
 ## Acknowledgments
