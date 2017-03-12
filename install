@@ -4,7 +4,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Source the default bash
-. "${DIR}/default-bash.sh"
+. "${DIR}/scripts/default-bash.sh"
 
 ################################
 # Prints usage 
@@ -57,5 +57,42 @@ cd build/Release
 sudo make -s install &> /dev/null
 debug "Update ld cache"
 sudo ldconfig
+
+# Linters
+info "Installing linters"
+
+# First install pip
+if ! sudo -H python -m pip install flake8 &> /dev/null; then
+  debug "Installing pip"
+
+  # Download pip install script
+  get_pip="$(mktemp)"
+  if ! wget -q -O ${get_pip} https://bootstrap.pypa.io/get-pip.py; then
+    err "Can't download get-pip.py from https://bootstrap.pypa.io/get-pip.py please check internet connection"
+    exit 1
+  fi
+
+  # Install pip
+  if ! "$(sudo -H python get_pip &> /dev/null)"; then
+    err "Failed to install pip"
+    exit 1
+  fi
+
+  # Install flake8
+  sudo -H python -m pip install flake8 &> /dev/null
+  if ! [[ "$?" ]]; then
+    err "Failed to install flake8"
+    exit 1
+  fi
+fi
+
+debug "flake8 installed"
+
+# Install pyserial
+info "Installing pyserial"
+if ! sudo -H python -m pip install pyserial &> /dev/null; then
+  err "Failed to install pyserial"
+  exit 1
+fi
 
 info "Installation complete"
