@@ -85,10 +85,10 @@ bin: build_dir $(BUILD_DIR)/$(PROJECT).bin
 
 unit_test: build_dir $(BUILD_DIR)/$(PROJECT)_unit_test.bin
 
-flash: build_dir $(BUILD_DIR)/$(PROJECT).bin
+flash: $(BUILD_DIR)/$(PROJECT).bin
 	$(STFLASH) write $< 0x08000000
 
-flash_unit_test: build_dir $(BUILD_DIR)/$(PROJECT)_unit_test.bin
+flash_unit_test: $(BUILD_DIR)/$(PROJECT)_unit_test.bin
 	$(STFLASH) write $< 0x08000000
 
 erase:
