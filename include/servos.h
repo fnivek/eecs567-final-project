@@ -30,9 +30,21 @@ static const Servo servos[] = {
 	{{GPIOA, GPIO3}, TIM2, 		TIM_OC4},		// kShoulder
 	{{GPIOA, GPIO5}, TIM2, 		TIM_OC1}		// kShoulder
 };
-// Max number of pwm ticks 
-//		168 MHZ / (2 * 20 KHz) 
-static const uint32_t kMaxPwmTicks = 4200;
+
+// Timer info http://www.st.com/content/ccc/resource/technical/document/reference_manual/3d/6d/5a/66/b4/99/40/d4/DM00031020.pdf/files/DM00031020.pdf/jcr:content/translations/en.DM00031020.pdf pg 612
+// Max number of pwm ticks
+//		Ticks_per_period = period * clk_freq / (2 * prescale)
+//				840,000  = 0.01   *  168 Mhz / (2 *     1   )
+static const uint32_t kTicksPerPeriod = 840000;
+
+// Pulse width values
+//		ticks_per_pulse_width (tPW) = ticks_per_period * pulse_width / period
+//					63,000          =  840000 * 1.5ms / 20ms
+static const uint32_t kZeroPW = 63000;
+//					42,000			=  840000 * 1ms / 20ms 
+static const uint32_t kMinPW = 42000;
+//					84,000			=  840000 * 2ms / 20ms
+static const uint32_t kMaxPW = 84000;
 
 void SetupServos(void);
 void ServosSetPWM(enum ServoIndex index, uint32_t pwm);

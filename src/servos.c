@@ -2,9 +2,8 @@
 
 void SetupServos(void) {
 	// Enable peripherials clocks
-	rcc_periph_clock_enable(RCC_TIM1);
+	rcc_periph_clock_enable(RCC_TIM2);
 	rcc_periph_clock_enable(RCC_GPIOA);
-	rcc_periph_clock_enable(RCC_GPIOC);
 
 	// Timer
 	// Step 1 reset peripherial:
@@ -12,12 +11,12 @@ void SetupServos(void) {
 	// Step 2 set mode
 	timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_CENTER_1,
                TIM_CR1_DIR_UP);
-	// Step 3 set output compare to PWM for both channels
+	// Step 3 set output compare to PWM for all channels
 	timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
 	timer_set_oc_mode(TIM2, TIM_OC2, TIM_OCM_PWM1);
 	timer_set_oc_mode(TIM2, TIM_OC3, TIM_OCM_PWM1);
 	timer_set_oc_mode(TIM2, TIM_OC4, TIM_OCM_PWM1);
-	// Step 4 enable output compare for both channels
+	// Step 4 enable output compare for all channels
 	timer_enable_oc_output(TIM2, TIM_OC1);
 	timer_enable_oc_output(TIM2, TIM_OC2);
 	timer_enable_oc_output(TIM2, TIM_OC3);
@@ -28,7 +27,7 @@ void SetupServos(void) {
 	timer_set_oc_value(TIM2, TIM_OC3, 0);
 	timer_set_oc_value(TIM2, TIM_OC4, 0);
 	// Step 6 set the period
-	timer_set_period(TIM2, kMaxPwmTicks);
+	timer_set_period(TIM2, kTicksPerPeriod);
 	// Step 7 enable break
 	timer_enable_break_main_output(TIM2);
 	// Step 8 enable done last
@@ -59,8 +58,10 @@ void SetupServos(void) {
 void ServosSetPWM(enum ServoIndex index, uint32_t pwm) {
 	const Servo* servo = &servos[index];
 
-	if (pwm > kMaxPwmTicks) {
-		pwm = kMaxPwmTicks;
+	if (pwm > kMaxPW) {
+		pwm = kMaxPW;
+	} else if(pwm < kMinPW) {
+		pwm = kMinPW;
 	}
 
 	timer_set_oc_value(servo->timer, servo->output_compare_channel, pwm);
@@ -69,6 +70,6 @@ void ServosSetPWM(enum ServoIndex index, uint32_t pwm) {
 void ServosZero(void) {
 	uint8_t index;
 	for(index = 0; index < kNumServos; ++index) {
-		ServosSetPWM(index, 0);
+		ServosSetPWM(index, kZeroPW);
 	}
 }
