@@ -61,3 +61,7 @@ int RemoveSystickCallback(void (*callback)(void))
 	}
 	return not_found;
 }
+
+uint32_t Now(void) {
+	return system_millis;
+}

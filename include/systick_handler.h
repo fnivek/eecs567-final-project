@@ -36,4 +36,7 @@ void SetupSystick(void);
 int AddSystickCallback(void (*callback)(void), uint32_t period);
 int RemoveSystickCallback(void (*callback)(void));
 
+// Return mills since start
+uint32_t Now(void);
+
 #endif

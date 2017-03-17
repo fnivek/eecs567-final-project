@@ -32,8 +32,8 @@ while True:
         time.sleep(3)
 
 # Send data to start USB OTG
-print 'Write next'
-ser.write("next")
+print 'Write start'
+ser.write("start")
 
 print 'Run test'
 # Read until we see the finished text
@@ -51,6 +51,12 @@ try:
             result += new
             if result.find("Finished") != -1:
                 break
+            if result.find("(y/n)") != -1:
+                user_in = ''
+                while user_in != 'y' and user_in != 'n':
+                    user_in = raw_input()
+                ser.write(user_in)
+                result = ''
 finally:
     # Close the serial port
     ser.close()

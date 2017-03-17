@@ -55,7 +55,7 @@ void SetupServos(void) {
 
 }
 
-void ServosSetPWM(enum ServoIndex index, uint32_t pwm) {
+void ServosSetPWM(ServoIndex index, uint32_t pwm) {
 	const Servo* servo = &servos[index];
 
 	if (pwm > kMaxPW) {

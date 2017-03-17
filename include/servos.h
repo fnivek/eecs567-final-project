@@ -14,14 +14,14 @@ typedef struct {
 	enum tim_oc_id	output_compare_channel;
 } Servo;
 
-enum ServoIndex {
+typedef enum ServoIndex {
 	kBase,
 	kShoulder,
 	kElbow,
 	kWrist,
 
 	kNumServos
-};
+} ServoIndex;
 
 static const Servo servos[] = {
 	//pwm,			timmer,		output_compare_channel
@@ -47,7 +47,7 @@ static const uint32_t kMinPW = 42000;
 static const uint32_t kMaxPW = 84000;
 
 void SetupServos(void);
-void ServosSetPWM(enum ServoIndex index, uint32_t pwm);
+void ServosSetPWM(ServoIndex index, uint32_t pwm);
 void ServosZero(void);
 
 #endif
