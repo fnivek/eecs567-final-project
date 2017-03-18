@@ -8,6 +8,7 @@ void SetupBoard(void) {
 	SetupDebugLeds();
 	SetupUsb();
 	SetupServos();
+	SetupI2C();
 	SetupSystick();
 }
 
