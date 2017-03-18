@@ -56,3 +56,6 @@ octave-workspace
 
 # Debug files
 *.dSYM/
+
+# Temp Linux files
+*.swp
