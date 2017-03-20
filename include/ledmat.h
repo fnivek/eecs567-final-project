@@ -43,6 +43,20 @@
 #define LEDMAT_NROWS					8
 #define LEDMAT_NCOLS					8
 
+// Full-screen number look-up table
+// Generated using http://xantorohara.github.io/led-matrix-editor/
+
+/*  0x3810101010101810,
+  0x7c08102040404438,
+  0x3844404030404438,
+  0x40407c4448506040,
+  0x384440403c04047c,
+  0x384444443c044438,
+  0x080808102040407c,
+  0x3844444438444438,
+  0x3844407844444438,
+  0x3844444444444438*/
+
 // Buffer of pixel data matching the memory map of the LED matrix
 // First byte of each row controls red LEDs,
 // second byte controls green LEDs
@@ -87,7 +101,7 @@ void LedmatDrawPolygon(Point2* ptList, int nCoords, uint8_t color);
 void LedmatDrawNumber(uint8_t number, uint8_t color);
 void LedmatDrawFloodfill(uint8_t color);
 
-// Command a single pixel to change color 
+// Command a single pixel to change color immediately 
 void LedmatCommandPixel(Point2 pt, uint8_t color);
 
 #endif // LEDMAT_H
