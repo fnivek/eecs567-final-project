@@ -9,6 +9,7 @@
 #include "debug_leds.h"
 #include "servos.h"
 #include "i2c.h"
+#include "ledmat.h"
 
 void SetupBoard(void);
 void Run(void);

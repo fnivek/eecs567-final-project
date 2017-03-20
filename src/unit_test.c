@@ -1,8 +1,10 @@
-#include "board.h"
-#include "debug_leds.h"
 #include <string.h>
 
-#define kNumTest 2
+#include "board.h"
+#include "debug_leds.h"
+
+
+#define kNumTest 3
 
 // All test functions return 0 if still running 1 on success and -1 on failure
 
@@ -144,6 +146,60 @@ int8_t TestServos(void) {
 	return 0;
 }
 
+// Test LED Matrix
+uint8_t ledmat_test_state = 0;
+uint8_t ledmat_test_x = 0;
+uint8_t ledmat_test_y = 0;
+uint8_t ledmat_test_color = LEDMAT_LED_OFF;
+int8_t TestLedmat(void) {
+	if (ledmat_test_state == 0) {
+		UsbWriteString("\n\r\n\rStarting LED Matrix test\n\r");
+		UsbWriteString("\n\rEnter \'y\' to end the test: ");
+
+		last_time = Now();
+		ledmat_test_state = 1;
+		ledmat_test_x = 0;
+		ledmat_test_y = 0;
+		ledmat_test_color = LEDMAT_LED_RED;
+		return 0;
+	}
+	else if (ledmat_test_state == 1) {
+		// Iteration pixel by pixel across all 3 colors
+		if (Now() - last_time >= 100) {
+			last_time = Now();
+			
+			LedmatDrawPixel(CastPoint2(ledmat_test_x, ledmat_test_y), ledmat_test_color);
+			LedmatRefreshDisplay();
+
+			if (++ledmat_test_x >= LEDMAT_NCOLS) {
+				ledmat_test_x = 0;
+				ledmat_test_y += 1;
+			}
+			if (ledmat_test_y >= LEDMAT_NROWS) {
+				ledmat_test_x = 0;
+				ledmat_test_y = 0;
+				ledmat_test_color += 1; // :^)
+			}
+			if (ledmat_test_color > LEDMAT_LED_YELLOW) {
+				ledmat_test_state = 2;
+				ledmat_test_x = 0;
+				ledmat_test_y = 0;
+				ledmat_test_color = LEDMAT_LED_RED;
+			}
+		}
+	}
+	else if (ledmat_test_state == 2) {
+		ledmat_test_state = 1;
+	}
+
+
+	if (CheckUsbBuf("y")) {
+		return 1;
+	}
+
+	return 0;
+}
+
 // main funciton
 int main(void) {
 	SetupBoard();
@@ -153,7 +209,8 @@ int main(void) {
 
 	int8_t (*tests[kNumTest])(void) = {
 		TestUsb,
-		TestServos
+		TestServos,
+		TestLedmat
 	};
 
 	// Loop through all test

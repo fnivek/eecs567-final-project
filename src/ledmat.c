@@ -239,6 +239,35 @@ void LedmatDrawPolygon(Point2* ptList, int nCoords, uint8_t color) {
 }
 
 void LedmatDrawNumber(uint8_t number, uint8_t color) {
+	// There might be a clever way to do this using memcpy but given the 
+	// display buffer layout this is easier
+	uint8_t currRowMask;
+
+	for (int q = 0; q < LEDMAT_NROWS; q++) {
+		// Iterate through all rows of the desired number
+		currRowMask = _LedmatNumTable[number][q];
+
+		switch (color) {
+		case LEDMAT_LED_OFF:
+			_LedmatDisplayBuff.row[q].red &= ~(currRowMask);
+			_LedmatDisplayBuff.row[q].green &= ~(currRowMask);
+			break;
+		case LEDMAT_LED_RED:
+			_LedmatDisplayBuff.row[q].red |= currRowMask;
+			_LedmatDisplayBuff.row[q].green &= ~(currRowMask);
+			break;
+		case LEDMAT_LED_GREEN:
+			_LedmatDisplayBuff.row[q].red &= ~(currRowMask);
+			_LedmatDisplayBuff.row[q].green |= currRowMask;
+			break;
+		case LEDMAT_LED_YELLOW:
+			_LedmatDisplayBuff.row[q].red |= currRowMask;
+			_LedmatDisplayBuff.row[q].green |= currRowMask;
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void LedmatDrawFloodfill(uint8_t color) {
