@@ -176,6 +176,45 @@ void ReadRegBlockingI2C(uint8_t i2c_addr, uint8_t reg, uint8_t size,
 
 void WriteRegBlockingI2C(uint8_t i2c_addr, uint8_t reg, uint8_t size,
 			uint8_t *buf) {
+	// Wait for busy flag to be cleared
+	while(CheckBusyFlag());
+
+	// Disable pos
+	I2C_CR1(I2C1) &= ~I2C_CR1_POS;
+
+	// Send slave address and memory address
+	//	Send start
+	i2c_send_start(I2C1);
+	//	Wait until SB flag set
+	while(!(I2C_SR1(I2C1) & I2C_SR1_SB));
+	//	Send addr
+	i2c_send_7bit_address(I2C1, i2c_addr, I2C_WRITE);
+	//	Wait for addr to be sent
+	while(!(I2C_SR1(I2C1) & I2C_SR1_ADDR));
+	//	Clear addr bit
+	ClearAddrFlag();
+	//	Wait for TXE
+	while(!(I2C_SR1(I2C1) & I2C_SR1_TxE));
+	//	Send register address
+	i2c_send_data(I2C1, reg);
+
+	// Send the data
+	while(size > 0) {
+		// 	Wait for TXE
+		while(!(I2C_SR1(I2C1) & I2C_SR1_TxE));
+
+		// Write data
+		i2c_send_data(I2C1, (*buf++));
+		--size;
+
+		// Check if btf set
+		if((I2C_SR1(I2C1) & I2C_SR1_BTF) && size != 0)  {
+			// Write data
+			i2c_send_data(I2C1, (*buf++));
+			--size;
+		}
+	}
+
 
 }
 
