@@ -5,6 +5,7 @@ void SetupI2C(void) {
 	rcc_periph_clock_enable(RCC_GPIOB);
 	gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, SCL_PIN | SDA_PIN);
 	gpio_set_af(GPIOB, GPIO_AF4, SCL_PIN | SDA_PIN);
+	gpio_set_output_options(GPIOB, GPIO_OTYPE_OD, GPIO_OSPEED_50MHZ, SCL_PIN | SDA_PIN);
 
 	// Setup i2c
 	// Enable periph clk
@@ -255,12 +256,14 @@ I2CStatus ReadRegBlockingI2C(uint8_t i2c_addr, uint8_t reg, uint8_t size,
 			}
 		}
 	}
+	// Release the bus
+	i2c_send_stop(I2C1);
+
 	return I2C_OK;
 }
 
 I2CStatus WriteRegBlockingI2C(uint8_t i2c_addr, uint8_t reg, uint8_t size,
 			uint8_t *buf) {
-	// Wait for busy flag to be cleared
 	// Wait for busy flag to be cleared
 	if(WaitForFlag(&I2C_SR2(I2C1), I2C_SR2_BUSY,
 		0, DEFAULT_TIMEOUT) != I2C_OK) {
@@ -314,6 +317,9 @@ I2CStatus WriteRegBlockingI2C(uint8_t i2c_addr, uint8_t reg, uint8_t size,
 			--size;
 		}
 	}
+	// Release the bus
+	i2c_send_stop(I2C1);
+
 	return I2C_OK;
 }
 
