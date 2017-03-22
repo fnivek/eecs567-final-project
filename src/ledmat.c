@@ -124,7 +124,7 @@ void SetupLedmat(void) {
 }
 
 void LedmatRefreshDisplay(void) {
-	// Begin writing data to the start of display buffer memory
+	// Begin writing data to the start of display buffer memory (0x00)
 	WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_BUFFER_REG | 0x00, sizeof(_LedmatDisplayBuff), _LedmatDisplayBuff.bytestream);
 }
 
@@ -226,7 +226,7 @@ void LedmatDrawLine(Point2 ptStart, Point2 ptEnd, uint8_t color) {
 	// Start at the origin
 	currY = 0;
 	
-	for (int currX = 0; currX < deltaX; currX++) {
+	for (int currX = 0; currX <= deltaX; currX++) {
 		// Convert plot space coordinate to the destination octant
 		// NOTE: yes this looks similar to the earlier code, but octants 2 and 6
 		//       have different conversions (swapped)
