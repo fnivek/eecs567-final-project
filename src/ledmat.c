@@ -1,6 +1,8 @@
 #include <string.h>
 
 #include "ledmat.h"
+#include "i2c.h"
+#include "debug_leds.h"
 
 inline uint8_t _isValidColor(uint8_t color) {
 	return (color == LEDMAT_LED_OFF || color == LEDMAT_LED_RED
@@ -46,12 +48,52 @@ inline uint8_t _octantOf(Point2 pt) {
 	}
 }
 
-void LedmatInit(void) {
+void SetupLedmat(void) {
+	I2CStatus stat;
+
 	// Enable LED matrix system clock
-	// i2cSendByte(LEDMAT_I2C_ADDR, LEDMAT_SYSCLOCK_REG | LEDMAT_SYSCLOCK_ON);
+	do {
+		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_SYSCLOCK_REG | LEDMAT_SYSCLOCK_ENABLE, 0, NULL);
+		SetDebugLed(kDebugBlueLed);
+	} while (stat == I2C_BUSY);
+	switch (stat) {
+	case I2C_OK:
+		ClearDebugLed(kDebugAllLeds);
+		SetDebugLed(kDebugGreenLed);
+		break;
+	case I2C_TIMEOUT:
+	case I2C_BUSY:
+	case I2C_ERROR:
+	case I2C_ACK_FAIL:
+	case I2C_NOT_IMPLEMENTED:
+		ClearDebugLed(kDebugAllLeds);
+		SetDebugLed(kDebugOrangeLed);
+		break;
+	default:
+		break;
+	}
 
 	// Set initial display brightness
-	// i2cSendByte(LEDMAT_I2C_ADDR, LEDMAT_BRIGHTNESS_REG | LED_BRIGHTNESS_MIN);
+	do {
+		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_BRIGHTNESS_REG | LEDMAT_BRIGHTNESS_MAX, 0, NULL);
+		SetDebugLed(kDebugBlueLed);
+	} while (stat == I2C_BUSY);
+	switch (stat) {
+	case I2C_OK:
+		ClearDebugLed(kDebugAllLeds);
+		SetDebugLed(kDebugGreenLed);
+		break;
+	case I2C_TIMEOUT:
+	case I2C_BUSY:
+	case I2C_ERROR:
+	case I2C_ACK_FAIL:
+	case I2C_NOT_IMPLEMENTED:
+		ClearDebugLed(kDebugAllLeds);
+		SetDebugLed(kDebugOrangeLed);
+		break;
+	default:
+		break;
+	}
 
 	// Initialize the display buffer to full off
 	LedmatClearBuffer();
@@ -59,12 +101,31 @@ void LedmatInit(void) {
 	LedmatRefreshDisplay();
 
 	// Set blink rate and enable screen
-	// i2cSendByte(LEDMAT_I2C_ADDR, LEDMAT_DISPLAY_REG | LEDMAT_DISPLAY_ON | LEDMAT_DISPLAY_BLINK_OFF);
+	do {
+		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_DISPLAY_REG | LEDMAT_DISPLAY_ON | LEDMAT_DISPLAY_BLINK_OFF, 0, NULL);
+		SetDebugLed(kDebugBlueLed);
+	} while (stat == I2C_BUSY);
+	switch (stat) {
+	case I2C_OK:
+		ClearDebugLed(kDebugAllLeds);
+		SetDebugLed(kDebugGreenLed);
+		break;
+	case I2C_TIMEOUT:
+	case I2C_BUSY:
+	case I2C_ERROR:
+	case I2C_ACK_FAIL:
+	case I2C_NOT_IMPLEMENTED:
+		ClearDebugLed(kDebugAllLeds);
+		SetDebugLed(kDebugOrangeLed);
+		break;
+	default:
+		break;
+	}
 }
 
 void LedmatRefreshDisplay(void) {
 	// Begin writing data to the start of display buffer memory
-	// i2cSendByte(LEDMAT_I2C_ADDR, LEDMAT_BUFFER_REG | 0x00);
+	WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_BUFFER_REG | 0x00, sizeof(_LedmatDisplayBuff), _LedmatDisplayBuff.bytestream);
 }
 
 void LedmatClearBuffer(void) {

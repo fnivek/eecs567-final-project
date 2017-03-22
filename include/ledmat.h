@@ -64,11 +64,13 @@ static const uint8_t _LedmatNumTable[10][LEDMAT_NROWS] = {
 union {
 	// Modification-friendly layout by row and color
 	struct {
-		uint8_t red;
 		uint8_t green;
+		uint8_t red;
 	} row[LEDMAT_NROWS];
 	// Memory-mapped layout identical to on the LED matrix
 	uint16_t mmapped[LEDMAT_NROWS];
+	// Easy-output format for i2c
+	uint8_t bytestream[2 * LEDMAT_NROWS];
 } _LedmatDisplayBuff;
 
 // Buffer modification macros
@@ -83,7 +85,7 @@ union {
 
 
 // Initialize the LED matrix display
-void LedmatInit(void);
+void SetupLedmat(void);
 
 // Send the entire current display buffer to the LED matrix
 // This takes a nontrivial amount of time

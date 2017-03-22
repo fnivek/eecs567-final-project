@@ -10,6 +10,7 @@ void SetupBoard(void) {
 	SetupServos();
 	SetupI2C();
 	SetupSystick();
+	SetupLedmat();
 }
 
 void Run(void) {
@@ -23,3 +24,4 @@ void RunOnce(void) {
 	// Poll usb
 	UsbPoll();
 }
+
