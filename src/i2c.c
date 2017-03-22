@@ -256,8 +256,6 @@ I2CStatus ReadRegBlockingI2C(uint8_t i2c_addr, uint8_t reg, uint8_t size,
 			}
 		}
 	}
-	// Release the bus
-	i2c_send_stop(I2C1);
 
 	return I2C_OK;
 }
@@ -317,6 +315,13 @@ I2CStatus WriteRegBlockingI2C(uint8_t i2c_addr, uint8_t reg, uint8_t size,
 			--size;
 		}
 	}
+
+	// 	Wait for TXE
+	if(WaitForFlag(&I2C_SR1(I2C1), I2C_SR1_TxE, 1,
+		DEFAULT_TIMEOUT)) {
+		return I2C_TIMEOUT;
+	}
+
 	// Release the bus
 	i2c_send_stop(I2C1);
 
