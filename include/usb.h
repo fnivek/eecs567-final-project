@@ -7,8 +7,8 @@
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/cm3/scb.h>
-
-#include "systick_handler.h"
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/timer.h>
 
 /*
  *			Definitions

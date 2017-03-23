@@ -21,7 +21,6 @@ void Run(void) {
 }
 
 void RunOnce(void) {
-	// Poll usb
-	UsbPoll();
+
 }
 

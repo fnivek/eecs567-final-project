@@ -1,6 +1,13 @@
 #include "usb.h"
 
 /*
+ * Defines
+ */
+//	Ticks_per_period = period * clk_freq / (2 * prescale)
+//			840  = 10us  *  168 Mhz / (2 *     1   )
+#define POLL_TICKS 840
+
+/*
  * Global variables
  */
 
@@ -207,6 +214,7 @@ void UsbWrite(const void* buf, uint16_t len)
 
 void SetupUsb(void)
 {
+	// Setup Usb
 	rcc_periph_clock_enable(RCC_GPIOA);
 	rcc_periph_clock_enable(RCC_OTGFS);
 
@@ -219,6 +227,19 @@ void SetupUsb(void)
 			usbd_control_buffer, sizeof(usbd_control_buffer));
 
 	usbd_register_set_config_callback(usbd_dev, CDCACMSetConfig);
+
+	// Setup timer for usb polling callbacks
+	rcc_periph_clock_enable(RCC_TIM3);
+	nvic_enable_irq(NVIC_TIM3_IRQ);
+	rcc_periph_reset_pulse(RST_TIM3);
+	// No divider, edge align, direction up
+	timer_set_mode(TIM3, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+	// No prescaling
+	timer_set_prescaler(TIM3, 0);
+	timer_set_period(TIM3, POLL_TICKS);
+	timer_set_oc_value(TIM3, TIM_OC1, POLL_TICKS);
+	timer_enable_counter(TIM3);
+	timer_enable_irq(TIM3, TIM_DIER_CC1IE);
 }
 
 void UsbPoll(void)
@@ -249,6 +270,23 @@ void UsbAddReadCallback(void (*callback)(void* buf, uint16_t len)) {
  */
 void UsbDefaultReadCallback(void* buf, uint16_t len) {
 	while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
+}
+
+uint32_t last_sys_time = 0;
+uint32_t ticks = 0;
+void tim3_isr(void) {
+	if(timer_get_flag(TIM3, TIM_SR_CC1IF)) {
+		// Clear the interrupt flag
+		timer_clear_flag(TIM3, TIM_SR_CC1IF);
+
+		// Poll usb
+		UsbPoll();
+		
+	} else if(timer_get_flag(TIM3, TIM_SR_CC1OF)) {
+		// Took more thatn POLL_TICKS to poll oops...
+		//	Oh well who cares
+		timer_clear_flag(TIM3, TIM_SR_CC1OF);
+	}
 }
 
 /*
