@@ -50,50 +50,48 @@ inline uint8_t _octantOf(Point2 pt) {
 
 void SetupLedmat(void) {
 	I2CStatus stat;
+	uint32_t tStart;
 
 	// Enable LED matrix system clock
+	SetDebugLed(kDebugBlueLed);
+	tStart = Now();
 	do {
 		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_SYSCLOCK_REG | LEDMAT_SYSCLOCK_ENABLE, 0, NULL);
-		SetDebugLed(kDebugBlueLed);
-	} while (stat == I2C_BUSY);
+	} while (stat == I2C_BUSY && (Now() - tStart) < LEDMAT_TIMEOUT);
 	switch (stat) {
 	case I2C_OK:
-		ClearDebugLed(kDebugAllLeds);
-		SetDebugLed(kDebugGreenLed);
+		ClearDebugLed(kDebugBlueLed);
 		break;
 	case I2C_TIMEOUT:
 	case I2C_BUSY:
 	case I2C_ERROR:
 	case I2C_ACK_FAIL:
 	case I2C_NOT_IMPLEMENTED:
-		ClearDebugLed(kDebugAllLeds);
-		SetDebugLed(kDebugOrangeLed);
-		break;
+		return;
 	default:
 		break;
 	}
 
 	// Set initial display brightness
+	SetDebugLed(kDebugBlueLed);
+	tStart = Now();
 	do {
-		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_BRIGHTNESS_REG | LEDMAT_BRIGHTNESS_MAX, 0, NULL);
-		SetDebugLed(kDebugBlueLed);
-	} while (stat == I2C_BUSY);
+		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_BRIGHTNESS_REG | LEDMAT_BRIGHTNESS_MID, 0, NULL);
+	} while (stat == I2C_BUSY && (Now() - tStart) < LEDMAT_TIMEOUT);
 	switch (stat) {
 	case I2C_OK:
-		ClearDebugLed(kDebugAllLeds);
-		SetDebugLed(kDebugGreenLed);
+		ClearDebugLed(kDebugBlueLed);
 		break;
 	case I2C_TIMEOUT:
 	case I2C_BUSY:
 	case I2C_ERROR:
 	case I2C_ACK_FAIL:
 	case I2C_NOT_IMPLEMENTED:
-		ClearDebugLed(kDebugAllLeds);
-		SetDebugLed(kDebugOrangeLed);
-		break;
+		return;
 	default:
 		break;
 	}
+	
 
 	// Initialize the display buffer to full off
 	LedmatClearBuffer();
@@ -101,23 +99,21 @@ void SetupLedmat(void) {
 	LedmatRefreshDisplay();
 
 	// Set blink rate and enable screen
+	SetDebugLed(kDebugBlueLed);
+	tStart = Now();
 	do {
 		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_DISPLAY_REG | LEDMAT_DISPLAY_ON | LEDMAT_DISPLAY_BLINK_OFF, 0, NULL);
-		SetDebugLed(kDebugBlueLed);
-	} while (stat == I2C_BUSY);
+	} while (stat == I2C_BUSY && (Now() - tStart) < LEDMAT_TIMEOUT);
 	switch (stat) {
 	case I2C_OK:
-		ClearDebugLed(kDebugAllLeds);
-		SetDebugLed(kDebugGreenLed);
+		ClearDebugLed(kDebugBlueLed);
 		break;
 	case I2C_TIMEOUT:
 	case I2C_BUSY:
 	case I2C_ERROR:
 	case I2C_ACK_FAIL:
 	case I2C_NOT_IMPLEMENTED:
-		ClearDebugLed(kDebugAllLeds);
-		SetDebugLed(kDebugOrangeLed);
-		break;
+		return;
 	default:
 		break;
 	}

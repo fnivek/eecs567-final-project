@@ -51,7 +51,7 @@ int8_t TestUsb(void) {
 	}
 
 	// Wait until start is sent
-	if(!CheckUsbBuf("start")) return 0;
+	if(!CheckUsbBuf("s")) return 0;
 	ClearDebugLed(kDebugOrangeLed);
 
 
@@ -151,6 +151,8 @@ uint8_t ledmat_test_state = 0;
 uint8_t ledmat_test_x = 0;
 uint8_t ledmat_test_y = 0;
 uint8_t ledmat_test_color = LEDMAT_LED_OFF;
+uint8_t ledmat_test_brightness = LEDMAT_BRIGHTNESS_MAX;
+Point2 ledmat_test_quad[4]; 
 int8_t TestLedmat(void) {
 	if (ledmat_test_state == 0) {
 		UsbWriteString("\n\r\n\rStarting LED Matrix test\n\r");
@@ -189,7 +191,47 @@ int8_t TestLedmat(void) {
 		}
 	}
 	else if (ledmat_test_state == 2) {
-		ledmat_test_state = 1;
+		// Draw vertical lines
+		if (Now() - last_time >= 200) {
+			last_time = Now();
+			
+			LedmatDrawLine(CastPoint2(ledmat_test_x, 0), CastPoint2(ledmat_test_x, 7), ledmat_test_color);
+			LedmatRefreshDisplay();
+
+			if (++ledmat_test_x >= LEDMAT_NCOLS) {
+				ledmat_test_x = 0;
+				ledmat_test_color += 1;
+			}
+			if (ledmat_test_color > LEDMAT_LED_YELLOW) {
+				ledmat_test_state = 3;
+				ledmat_test_x = 0;
+				ledmat_test_color = LEDMAT_LED_RED;
+			}
+		}
+	}
+	else if (ledmat_test_state == 3) {
+		// Draw concentric squares
+		if (Now() - last_time >= 200) {
+			last_time = Now();
+
+			ledmat_test_quad[0] = CastPoint2(0 + ledmat_test_x, 0 + ledmat_test_x);
+			ledmat_test_quad[1] = CastPoint2(0 + ledmat_test_x, 7 - ledmat_test_x);
+			ledmat_test_quad[2] = CastPoint2(7 - ledmat_test_x, 7 - ledmat_test_x);
+			ledmat_test_quad[3] = CastPoint2(7 - ledmat_test_x, 0 + ledmat_test_x);
+
+			LedmatDrawPolygon(ledmat_test_quad, 4, ledmat_test_color);
+			LedmatRefreshDisplay();
+
+			if (++ledmat_test_x > 4) {
+				ledmat_test_x = 0;
+				ledmat_test_color += 1;
+			}
+			if (ledmat_test_color > LEDMAT_LED_YELLOW) {
+				ledmat_test_state = 1;
+				ledmat_test_x = 0;
+				ledmat_test_color = LEDMAT_LED_RED;
+			}
+		}
 	}
 
 
