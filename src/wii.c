@@ -22,11 +22,21 @@ void SetupWii(void) {
 }
 
 NunchuckData ReadWii(void) {
-	// Buffer for data to write
-	uint8_t buf[WII_DATA_LENGTH];
-	while(ReadRegBlockingI2C(WII_ADDR, WII_CMD_DATA_READ, WII_DATA_LENGTH, buf) != I2C_OK) {
-		
-	}
 	NunchuckData data;
+
+	data.buf[0] = WII_CMD_DATA_READ;
+	if(WriteBlockingI2C(WII_ADDR, 1, data.buf) != I2C_OK) {
+		return data;
+	}
+
+	// Delay...
+	volatile uint32_t i;
+	for(i = 0; i < 5000; ++i);
+
+	I2CStatus status = ReadBlockingI2C(WII_ADDR, WII_DATA_LENGTH, data.buf);
+	if(status != I2C_OK) {
+		return data;
+	}
+
 	return data;
 }

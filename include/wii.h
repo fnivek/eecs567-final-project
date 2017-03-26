@@ -3,7 +3,7 @@
 
 #include "i2c.h"
 
-#define WII_ADDR 		0x52
+#define WII_ADDR            0x52
 #define WII_INIT_REG1       0xF0
 #define WII_INIT_REG2       0xFB
 #define WII_INIT_BYTE1      0x55
@@ -12,7 +12,7 @@
 #define WII_DATA_LENGTH     6
 
 typedef union {
-    uint8_t buffer[WII_DATA_LENGTH];
+    uint8_t buf[WII_DATA_LENGTH];
     struct {
         uint8_t joy_x;
         uint8_t joy_y;
