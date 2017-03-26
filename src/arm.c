@@ -4,7 +4,7 @@ void SetupArm(void) {
 	// Servos will default to their 0
 	// So set out joint angles to the offset
 	for (int q = 0; q < ARM_NJOINTS; q++) {
-		ArmJointAngles[q] = ArmJointDirection[joint] * ArmJointOffset[q];
+		ArmJointAngles[q] = ArmJointDirection[q] * ArmJointOffset[q];
 	}
 }
 
