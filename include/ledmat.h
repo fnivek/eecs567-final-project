@@ -8,6 +8,9 @@
 // Backpack configured with A0~A2 set to 0
 #define LEDMAT_I2C_ADDR	0x70
 
+// Timeout for communications with the matrix (msec)
+#define LEDMAT_TIMEOUT	100
+
 // System oscillator control
 // Must be enabled first on device boot
 #define LEDMAT_SYSCLOCK_REG				0x20
@@ -28,6 +31,7 @@
 // in increments of 1/16th
 #define LEDMAT_BRIGHTNESS_REG			0xE0
 #define LEDMAT_BRIGHTNESS_MIN			0x00
+#define LEDMAT_BRIGHTNESS_MID			0x09
 #define LEDMAT_BRIGHTNESS_MAX			0x0F
 
 // Display buffer memory access
@@ -105,6 +109,6 @@ void LedmatDrawNumber(uint8_t number, uint8_t color);
 void LedmatDrawFloodfill(uint8_t color);
 
 // Command a single pixel to change color immediately 
-void LedmatCommandPixel(Point2 pt, uint8_t color);
+//void LedmatCommandPixel(Point2 pt, uint8_t color);
 
 #endif // LEDMAT_H
