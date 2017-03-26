@@ -385,7 +385,7 @@ I2CStatus ReadBlockingI2C(uint8_t i2c_addr, uint8_t size,
 		return I2C_TIMEOUT;
 	}
 	//	Send the slave address
-	i2c_send_7bit_address(I2C1, i2c_addr, I2C_WRITE);
+	i2c_send_7bit_address(I2C1, i2c_addr, I2C_READ);
 	//	Wait for addr to be sent
 	status = WaitForAddr(DEFAULT_TIMEOUT);
 	if(status != I2C_OK) {
