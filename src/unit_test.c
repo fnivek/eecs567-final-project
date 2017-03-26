@@ -4,7 +4,7 @@
 #include "debug_leds.h"
 
 
-#define kNumTest 3
+#define kNumTest 4
 
 // All test functions return 0 if still running 1 on success and -1 on failure
 
@@ -242,6 +242,25 @@ int8_t TestLedmat(void) {
 	return 0;
 }
 
+int8_t TestWii(void) {
+	// Send start message every 1 second
+	if(Now() - last_time > kWaitTime) {
+		last_time = Now();
+		UsbWriteString("\nPress c on the wii nunchuck or send s to skip\n");
+	}
+
+	NunchuckData data = ReadWii();
+	if(!data.fields.button_c) {
+		UsbWriteString("c was pressed!\n");
+		return 1;
+	} else if(CheckUsbBuf("s")) {
+		UsbWriteString("Test was skiped :(\n");
+		return -1;
+	} else {
+		return 0;
+	}
+}
+
 // main funciton
 int main(void) {
 	SetupBoard();
@@ -252,7 +271,8 @@ int main(void) {
 	int8_t (*tests[kNumTest])(void) = {
 		TestUsb,
 		TestServos,
-		TestLedmat
+		TestLedmat,
+		TestWii
 	};
 
 	// Loop through all test
