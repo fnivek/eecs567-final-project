@@ -11,6 +11,7 @@
 #include "arm.h"
 #include "i2c.h"
 #include "ledmat.h"
+#include "wii.h"
 
 void SetupBoard(void);
 void Run(void);

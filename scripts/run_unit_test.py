@@ -32,8 +32,8 @@ while True:
         time.sleep(3)
 
 # Send data to start USB OTG
-print 'Write start'
-ser.write("start")
+print 'Write s'
+ser.write("s")
 
 print 'Run test'
 # Read until we see the finished text

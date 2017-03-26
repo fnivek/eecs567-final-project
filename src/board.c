@@ -9,9 +9,12 @@ void SetupBoard(void) {
 	SetupUsb();
 	SetupServos();
 	SetupI2C();
-	SetupSystick();
-	SetupLedmat();
+	SetupLedmat();	// After i2c
+	SetupWii();		// After i2c
 	SetupArm();
+
+	// Should be last
+	SetupSystick();
 }
 
 void Run(void) {
