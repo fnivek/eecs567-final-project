@@ -11,6 +11,7 @@ void SetupBoard(void) {
 	SetupI2C();
 	SetupSystick();
 	SetupLedmat();
+	SetupArm();
 }
 
 void Run(void) {

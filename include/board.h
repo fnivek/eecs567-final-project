@@ -8,6 +8,7 @@
 #include "systick_handler.h"
 #include "debug_leds.h"
 #include "servos.h"
+#include "arm.h"
 #include "i2c.h"
 #include "ledmat.h"
 
