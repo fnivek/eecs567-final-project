@@ -13,6 +13,7 @@
 
 uint8_t USB_READY;
 usbd_device *usbd_dev;
+uint8_t usb_lock;
 
 // Read callback function pointer
 void (*read_callback)(void* buf, uint16_t len);
@@ -209,7 +210,14 @@ void UsbWrite(const void* buf, uint16_t len)
 		return;
 	}
 
+	// Get lock
+	while(usb_lock);
+	usb_lock = 1;
+
 	while (usbd_ep_write_packet(usbd_dev, 0x82, buf, len) == 0);
+
+	// Release lock
+	usb_lock = 0;
 }
 
 void SetupUsb(void)
@@ -244,7 +252,14 @@ void SetupUsb(void)
 
 void UsbPoll(void)
 {
-	usbd_poll(usbd_dev);
+	if(!usb_lock) {
+		// Get lock
+		usb_lock = 1;
+		usbd_poll(usbd_dev);
+
+		// Release lock
+		usb_lock = 0;
+	}
 }
 
 
@@ -296,3 +311,4 @@ void tim3_isr(void) {
 uint8_t USB_READY = 0;
 usbd_device *usbd_dev = NULL;
 void (*read_callback)(void* buf, uint16_t len) = UsbDefaultReadCallback;
+uint8_t usb_lock = 0;
