@@ -16,7 +16,7 @@ void sys_tick_handler(void)
 	{
 		if(!(system_millis % systick_callbacks.callback_list[i].period))
 		{
-			systick_callbacks.callback_list[i].callback();
+			systick_callbacks.callback_list[i].call_count++;
 		}
 	}
 }
@@ -30,18 +30,19 @@ void SetupSystick(void)
 	systick_interrupt_enable();
 }
 
-int AddSystickCallback(void (*callback)(void), uint32_t period)
+int AddSystickCallback(VoidCB callback, uint32_t period)
 {
 	if(systick_callbacks.index < kMaxCallbacks)
 	{
 		systick_callbacks.callback_list[systick_callbacks.index].callback = callback;
-		systick_callbacks.callback_list[systick_callbacks.index++].period = period;
+		systick_callbacks.callback_list[systick_callbacks.index].period = period;
+		systick_callbacks.callback_list[systick_callbacks.index++].call_count = 0;
 		return 0;
 	}
 	return -1;
 }
 
-int RemoveSystickCallback(void (*callback)(void))
+int RemoveSystickCallback(VoidCB callback)
 {
 	int not_found = -1;
 	int i;
@@ -64,4 +65,16 @@ int RemoveSystickCallback(void (*callback)(void))
 
 uint32_t Now(void) {
 	return system_millis;
+}
+
+void DoSystickCallbacks(void) {
+	int i;
+	for(i = 0; i < systick_callbacks.index; ++i)
+	{
+		if(systick_callbacks.callback_list[i].call_count)
+		{
+			systick_callbacks.callback_list[i].call_count--;
+			systick_callbacks.callback_list[i].callback();
+		}
+	}
 }

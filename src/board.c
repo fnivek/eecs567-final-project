@@ -25,6 +25,7 @@ void Run(void) {
 }
 
 void RunOnce(void) {
-
+	// Do all the system tick callbacks
+	DoSystickCallbacks();
 }
 

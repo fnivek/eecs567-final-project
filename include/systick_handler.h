@@ -3,9 +3,13 @@
 
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/cm3/nvic.h>
+#include "queue.h"
 
 // constants
 #define kMaxCallbacks 10
+
+// typedef for void callbacks
+typedef void (*VoidCB)(void);
 
 // Globals
 volatile uint32_t system_millis;
@@ -14,10 +18,13 @@ volatile uint32_t system_millis;
 typedef struct SystickCallback
 {
 	// Callback to a function which performs the desired operation
-	void (*callback)(void);
+	VoidCB callback;
 
 	// The period in milliseconds at which to call the callback
 	uint32_t period;
+
+	// Call count (the callback should be called this many times)
+	uint8_t call_count;
 } SystickCallback;
 
 typedef struct SystickCallbackList
@@ -33,8 +40,10 @@ void sys_tick_handler(void);
 
 void SetupSystick(void);
 
-int AddSystickCallback(void (*callback)(void), uint32_t period);
-int RemoveSystickCallback(void (*callback)(void));
+int AddSystickCallback(VoidCB callback, uint32_t period);
+int RemoveSystickCallback(VoidCB callback);
+
+void DoSystickCallbacks(void);
 
 // Return mills since start
 uint32_t Now(void);
