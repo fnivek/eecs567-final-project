@@ -2,6 +2,11 @@
 #define HELPERS_H
 
 #include <stdint.h>
+#include <string.h>
+
+#ifndef M_PI
+#define M_PI           3.14159265358979323846
+#endif
 
 typedef struct {
 	uint32_t port; 
@@ -24,4 +29,6 @@ typedef struct {
 Point2 CastPoint2(double x, double y);
 Point3 CastPoint3(double x, double y, double z);
 
-#endif
+void swap(void* a, void* b, int size);
+
+#endif // HELPERS_H

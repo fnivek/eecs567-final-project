@@ -1,7 +1,10 @@
 #ifndef ARM_H
 #define ARM_H
 
+#include <math.h>
+
 #include "servos.h"
+#include "helpers.h"
 
 #define ARM_NJOINTS					4
 
@@ -15,22 +18,26 @@
 // Unified naming across servos and the joints
 typedef ServoIndex ArmIndex;
 
-// Static offsets to convert between 0 of joint space and 0 of servo
-static const double ArmJointOffset[ARM_NJOINTS] = {
-	0.0, 	// Base
-	0.0, 	// Shoulder
-	0.0,	// Elbow
-	0.0		// Wrist
-};
+typedef struct {
+	// Offset between joint 0 and servo 0
+	double JointAngleOffset;
+	// Rotation direction when viewed from gearhead
+	//		 1 = ccw
+	//		-1 = cw
+	int8_t JointDirection;
+	// Denavit-Hartenberg params
+	double DHtheta;
+	double DHd;
+	double DHa;
+	double DHalpha;
+} ArmSegment;
 
-// Rotation directions for each servo when viewed from the gear head
-//		1	= counter-clockwise
-//		-1	= clockwise
-static const int8_t ArmJointDirection[ARM_NJOINTS] = {
-	-1,		// Base
-	-1,		// Shoulder
-	-1,		// Elbow
-	-1		// Wrist
+static const ArmSegment Arm[ARM_NJOINTS] = {
+	// offset,		dir,	theta,		d,			a,			alpha
+	{0.0000,		-1,		0.0000,		1.0000,		0.0000,		-M_PI / 2},	// Base
+	{0.0000,		-1,		-M_PI / 2,	1.5000,		6.0000,		0.0000},	// Shoulder
+	{0.0000,		-1,		0.0000,		-1.5000,	6.0000,		0.0000},	// Elbow
+	{0.0000,		-1,		0.0000,		0.0000,		0.0000,		0.0000}		// Wrist
 };
 
 // Current joint angles being commanded of the servos

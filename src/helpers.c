@@ -17,3 +17,11 @@ Point3 CastPoint3(double x, double y, double z) {
 	return newPoint;
 }
 
+void swap(void* a, void* b, int size) {
+	uint8_t c[size];
+
+	memcpy(c, a, size);
+	memcpy(a, b, size);
+	memcpy(b, c, size);
+}
+
