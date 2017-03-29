@@ -3,7 +3,6 @@
 
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/cm3/nvic.h>
-#include "queue.h"
 
 // constants
 #define kMaxCallbacks 10
