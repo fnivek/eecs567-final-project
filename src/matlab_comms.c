@@ -76,5 +76,21 @@ void MatlabCommsSendAngles(float* angles, int numAngles) {
 }
 
 void MatlabCommsSendPos(Point3 pos) {
+	uint8_t outBuff[100];
+	union {
+		uint8_t bytes[3 * sizeof(float)];
+		Point3 pos;
+	} outgoing;
+
+	outgoing.pos = pos;
+
+	outBuff[0] = 0xAA;
+	outBuff[1] = 0x55;
+	outBuff[2] = 1 + 3 * sizeof(float);
+	outBuff[3] = 0x11;
+
+	memcpy((void*)(outBuff + 4), outgoing.bytes, 3 * sizeof(float));
+
+	UsbWrite(outBuff, 4 + 3 * sizeof(float));
 }
 
