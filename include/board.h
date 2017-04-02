@@ -12,6 +12,7 @@
 #include "i2c.h"
 #include "ledmat.h"
 #include "wii.h"
+#include "kinematics.h"
 
 void SetupBoard(void);
 void Run(void);
