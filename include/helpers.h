@@ -15,19 +15,20 @@ typedef struct {
 
 // 2-dimensional point in a float space
 typedef struct {
-	double x;
-	double y;
+	float x;
+	float y;
 } Point2;
 
 // 3-dimensional point in a float space
 typedef struct {
-	double x;
-	double y;
-	double z;
+	float x;
+	float y;
+	float z;
 } Point3;
 
-Point2 CastPoint2(double x, double y);
-Point3 CastPoint3(double x, double y, double z);
+Point2 CastPoint2(float x, float y);
+Point3 CastPoint3(float x, float y, float z);
+void Point3ToFloatArray(Point3 p, float* array);
 
 void swap(void* a, void* b, int size);
 
