@@ -20,16 +20,16 @@ typedef ServoIndex ArmIndex;
 
 typedef struct {
 	// Offset between joint 0 and servo 0
-	double JointAngleOffset;
+	float JointAngleOffset;
 	// Rotation direction when viewed from gearhead
 	//		 1 = ccw
 	//		-1 = cw
 	int8_t JointDirection;
 	// Denavit-Hartenberg params
-	double DHtheta;
-	double DHd;
-	double DHa;
-	double DHalpha;
+	float DHtheta;
+	float DHd;
+	float DHa;
+	float DHalpha;
 } ArmSegment;
 
 static const ArmSegment Arm[ARM_NJOINTS] = {
@@ -41,15 +41,19 @@ static const ArmSegment Arm[ARM_NJOINTS] = {
 };
 
 // Current joint angles being commanded of the servos
-double ArmJointAngles[ARM_NJOINTS];
+float ArmJointAngles[ARM_NJOINTS];
 
 
 
 void SetupArm(void);
 
-void ArmSetJointAngle(ArmIndex joint, double angle);
-void ArmSetJointAngles(ArmIndex* joints, double* angles, uint8_t length);
-void ArmSetJointAnglesAll(double* angles);
+void ArmSetJointAngle(ArmIndex joint, float angle);
+void ArmSetJointAngles(ArmIndex* joints, float* angles, uint8_t length);
+void ArmSetJointAnglesAll(float* angles);
+
+float ArmGetJointAngle(ArmIndex joint);
+void ArmGetJointAngles(ArmIndex* joints, float* angles, uint8_t length);
+void ArmGetJointAnglesAll(float* angles);
 
 
 #endif // ARM_H
