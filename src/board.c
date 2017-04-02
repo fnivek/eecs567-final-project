@@ -7,6 +7,7 @@ void SetupBoard(void) {
 	// Setup components
 	SetupDebugLeds();
 	SetupUsb();
+	SetupMatlabComms();
 	SetupServos();
 	SetupI2C();
 	SetupLedmat();	// After i2c
