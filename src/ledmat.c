@@ -50,14 +50,14 @@ inline uint8_t _octantOf(Point2 pt) {
 
 void SetupLedmat(void) {
 	I2CStatus stat;
-	uint32_t tStart;
+	uint32_t nTries;
 
 	// Enable LED matrix system clock
 	SetDebugLed(kDebugBlueLed);
-	tStart = Now();
+	nTries = 0;
 	do {
 		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_SYSCLOCK_REG | LEDMAT_SYSCLOCK_ENABLE, 0, NULL);
-	} while (stat == I2C_BUSY && (Now() - tStart) < LEDMAT_TIMEOUT);
+	} while (stat == I2C_BUSY && nTries++ < LEDMAT_TIMEOUT);
 	switch (stat) {
 	case I2C_OK:
 		ClearDebugLed(kDebugBlueLed);
@@ -74,10 +74,10 @@ void SetupLedmat(void) {
 
 	// Set initial display brightness
 	SetDebugLed(kDebugBlueLed);
-	tStart = Now();
+	nTries = 0;
 	do {
 		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_BRIGHTNESS_REG | LEDMAT_BRIGHTNESS_MID, 0, NULL);
-	} while (stat == I2C_BUSY && (Now() - tStart) < LEDMAT_TIMEOUT);
+	} while (stat == I2C_BUSY && nTries++ < LEDMAT_TIMEOUT);
 	switch (stat) {
 	case I2C_OK:
 		ClearDebugLed(kDebugBlueLed);
@@ -100,10 +100,10 @@ void SetupLedmat(void) {
 
 	// Set blink rate and enable screen
 	SetDebugLed(kDebugBlueLed);
-	tStart = Now();
+	nTries = 0;
 	do {
 		stat = WriteRegBlockingI2C(LEDMAT_I2C_ADDR, LEDMAT_DISPLAY_REG | LEDMAT_DISPLAY_ON | LEDMAT_DISPLAY_BLINK_OFF, 0, NULL);
-	} while (stat == I2C_BUSY && (Now() - tStart) < LEDMAT_TIMEOUT);
+	} while (stat == I2C_BUSY && nTries++ < LEDMAT_TIMEOUT);
 	switch (stat) {
 	case I2C_OK:
 		ClearDebugLed(kDebugBlueLed);

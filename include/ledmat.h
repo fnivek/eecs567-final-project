@@ -8,7 +8,7 @@
 // Backpack configured with A0~A2 set to 0
 #define LEDMAT_I2C_ADDR	0x70
 
-// Timeout for communications with the matrix (msec)
+// Timeout for communications with the matrix (# tries)
 #define LEDMAT_TIMEOUT	100
 
 // System oscillator control
