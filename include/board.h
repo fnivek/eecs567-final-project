@@ -13,6 +13,7 @@
 #include "ledmat.h"
 #include "wii.h"
 #include "matlab_comms.h"
+#include "kinematics.h"
 
 void SetupBoard(void);
 void Run(void);
