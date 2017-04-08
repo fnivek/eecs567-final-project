@@ -14,16 +14,17 @@ typedef enum KinematicsControlType {
 } KinematicsControlType;
 
 /*----- Constants -----*/
-static const float kKinematicsJInvGain = 1;
+static const float kKinematicsJInvGain = 10;
 static const float kKinematicsUpdatePeriod = 0.02; // Seconds
 static const uint32_t kKinematicsUpdatePeriodMillis = 20; // 50 Hz
+static const float kKinematicsMaxJointChange = 0.1; // rads/period
+static const float kKinematicsMinJointChange = -0.1; // rads/period
 
 /*----- Private vars -----*/
 Point3 _KinematicsTarget;
-Point3 _KinematicsLastCmd;
+float _KinematicsLastCmd[3];
 uint8_t _KinematicsEnable;
 KinematicsControlType _KinematicsType;
-uint32_t _KinematicsLastTime;
 
 void SetupKinematics(void);
 

@@ -20,6 +20,9 @@ void SetupBoard(void) {
 	SetupWii();		// After i2c
 	SetupArm();
 	SetupKinematics();	// After setup arm
+
+	// Enable kinematics
+	KinematicsSetControlEnable(1);
 }
 
 void Run(void) {
