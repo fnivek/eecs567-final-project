@@ -13,7 +13,7 @@
 //
 // (ticks_per_period * delta_pulse_width / period) / delta_angle
 // (840000  * 0.5ms / 20ms) / 60deg
-#define ARM_PWM_TICKS_PER_DEGREE	(21000.0 / 60.0)
+#define ARM_PWM_TICKS_PER_RAD	(21000.0 / (M_PI / 3.0))
 
 // Unified naming across servos and the joints
 typedef ServoIndex ArmIndex;

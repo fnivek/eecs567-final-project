@@ -14,7 +14,7 @@ void ArmSetJointAngle(ArmIndex joint, float angle) {
 	servoAngle = Arm[joint].JointDirection * angle + Arm[joint].JointAngleOffset;
 
 	// Convert angle command to a PWM count
-	pwmCommand = servoAngle * ARM_PWM_TICKS_PER_DEGREE + kZeroPW;
+	pwmCommand = servoAngle * ARM_PWM_TICKS_PER_RAD + kZeroPW;
 
 	// Keep track of our new angle
 	ArmJointAngles[joint] = angle;
