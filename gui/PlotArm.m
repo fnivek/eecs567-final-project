@@ -2,7 +2,6 @@ function PlotArm(axesHandle, q)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-q = deg2rad(q);
 nJoints = 3;
 a = [6, 6, 6];
 d = [1.0, 1.5, -1.5];
