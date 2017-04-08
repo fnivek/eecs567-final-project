@@ -62,7 +62,7 @@ classdef ArmLink < handle
                         obj.jointAngles(i) = typecast(rawvals(:,i), 'single');
                     end
                 % Incoming end effector position
-                case hex2dev('11')
+                case hex2dec('11')
                     if msgLen ~= 3 * 4 + 1
                         % Expect 3 floats and opcode
                         return;
