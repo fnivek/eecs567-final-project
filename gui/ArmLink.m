@@ -19,6 +19,8 @@ classdef ArmLink < handle
         
         function open(obj)
             set(obj.portStream,'Port',obj.portName);
+            set(obj.portStream,'OutputBufferSize',5120);
+            set(obj.portStream,'InputBufferSize',5120);
             fopen(obj.portStream);
             
             % Start the stream
