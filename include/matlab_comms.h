@@ -7,7 +7,7 @@
 void SetupMatlabComms(void);
 
 void MatlabCommsSendAngles(void);
-void MatlabCommsSendPos(Point3 pos);
+void MatlabCommsSendPos(void);
 
 
 

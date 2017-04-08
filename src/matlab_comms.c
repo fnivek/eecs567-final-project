@@ -3,6 +3,7 @@
 #include "matlab_comms.h"
 #include "usb.h"
 #include "arm.h"
+#include "kinematics.h"
 
 uint8_t _packetBuffs[2][100];
 uint8_t _currBuff;
@@ -80,14 +81,14 @@ void MatlabCommsSendAngles(void) {
 	UsbWrite(outBuff, 4 + ARM_NJOINTS * sizeof(float));
 }
 
-void MatlabCommsSendPos(Point3 pos) {
+void MatlabCommsSendPos(void) {
 	uint8_t outBuff[100];
 	union {
 		uint8_t bytes[3 * sizeof(float)];
 		Point3 pos;
 	} outgoing;
 
-	outgoing.pos = pos;
+	outgoing.pos = KinematicsGetArmPosition();
 
 	outBuff[0] = 0xAA;
 	outBuff[1] = 0x55;

@@ -23,7 +23,8 @@ void SetupBoard(void) {
 	SetupKinematics();	// After setup arm
 
 	// Regular report to Matlab over USB
-	AddSystickCallback((VoidCB)MatlabCommsSendAngles, 30);
+	AddSystickCallback((VoidCB)MatlabCommsSendAngles, 50);
+	AddSystickCallback((VoidCB)MatlabCommsSendPos, 50);
 
 	// Enable kinematics
 	KinematicsSetControlEnable(1);
