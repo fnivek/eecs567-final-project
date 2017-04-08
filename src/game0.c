@@ -33,7 +33,7 @@ float th1;
 float th2;
 
 		
-int Game0(void){
+int game0(void){
 	//Read: Joystick
 		NunchuckData data = ReadWii();
 		uint8_t xjdata = data.fields.joy_x;
