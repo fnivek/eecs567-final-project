@@ -13,6 +13,12 @@ void SumV3V3(float* v3_a, float* v3_b, float* result) {
 	}
 }
 
+void WriteV3(float* v3) {
+	char buf[64];
+	snprintf(buf, 64, "[%.3g, %.3g, %.3g]", v3[0], v3[1], v3[2]);
+	UsbWriteString(buf);
+}
+
 
 // M3x3 * v3
 void ProductM3x3V3(float(*m3x3)[3], float* v3, float* result) {
@@ -31,7 +37,7 @@ int InvertM3x3(float(*m3x3)[3], float(*result)[3]) {
 	float det = m3x3[0][0] * (m3x3[1][1] * m3x3[2][2] - m3x3[1][2] * m3x3[2][1])
 		- m3x3[0][1] * (m3x3[1][0] * m3x3[2][2] - m3x3[1][2] * m3x3[2][0])
 		+ m3x3[0][2] * (m3x3[1][0] * m3x3[2][1] - m3x3[1][1] * m3x3[2][0]);
-	if (fabs(det) < 0.01) {
+	if (fabs(det) < 0.0001) {
 		// Too close to singular
 		return 1;
 	}
@@ -74,5 +80,17 @@ void ProductScalarM3x3(float scalar, float(*m3x3)[3], float(*result)[3]) {
 		for (uint8_t j = 0; j < 3; j++) {
 			result[i][j] = m3x3[i][j] * scalar;
 		}
+	}
+}
+
+void WriteM3x3(float(*m3x3)[3]) {
+	char buf[64];
+	for(uint8_t i = 0; i < 3; ++i) {
+		int chars = snprintf(buf, 64, "[%.3g, %.3g, %.3g],\n", m3x3[i][0], m3x3[i][1], m3x3[i][2]);
+		if(i == 2 && chars < 64 && chars > 0) {
+			// Remove the last \n
+			buf[chars - 1] = '\0';
+		}
+		UsbWriteString(buf);
 	}
 }
