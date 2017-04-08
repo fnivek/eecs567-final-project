@@ -17,6 +17,8 @@ void SetupBoard(void) {
 	SetupWii();		// After i2c
 	SetupArm();
 
+	// Regular report to Matlab over USB
+	AddSystickCallback((VoidCB)MatlabCommsSendAngles, 30);
 }
 
 void Run(void) {

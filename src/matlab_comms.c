@@ -2,6 +2,7 @@
 
 #include "matlab_comms.h"
 #include "usb.h"
+#include "arm.h"
 
 uint8_t _packetBuffs[2][100];
 uint8_t _currBuff;
@@ -62,17 +63,21 @@ void SetupMatlabComms(void) {
 	UsbAddReadCallback(_MatlabCommsCallback);
 }
 
-void MatlabCommsSendAngles(float* angles, int numAngles) {
+void MatlabCommsSendAngles(void) {
 	uint8_t outBuff[100];
+	float angles[ARM_NJOINTS];
+
+	// Get current angles
+	ArmGetJointAnglesAll(angles);
 
 	outBuff[0] = 0xAA;
 	outBuff[1] = 0x55;
-	outBuff[2] = 1 + numAngles * sizeof(float);
+	outBuff[2] = 1 + ARM_NJOINTS * sizeof(float);
 	outBuff[3] = 0x10;
 
-	memcpy((void*)(outBuff + 4), angles, numAngles * sizeof(float));
+	memcpy((void*)(outBuff + 4), angles, ARM_NJOINTS * sizeof(float));
 
-	UsbWrite(outBuff, 4 + numAngles * sizeof(float));
+	UsbWrite(outBuff, 4 + ARM_NJOINTS * sizeof(float));
 }
 
 void MatlabCommsSendPos(Point3 pos) {
