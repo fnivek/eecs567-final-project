@@ -4,7 +4,7 @@
 float jold[3] = {0, 8, 0};
 
 // Global const
-const float kGame0Stepsize = .05;
+const float kGame0Stepsize = .03;
 const float kZmag = 0.5; // kZmag gets multiplied by kGame0Stepsize so scale appropriatly
 		
 void game0(void) {
@@ -20,8 +20,8 @@ void game0(void) {
 
 	//Decompose: Joystick to LED Space (8x8)
 		Point2 led_coord = {
-			round((joy_data[0] + 1) * 4),
-			round((joy_data[1] + 1) * 4)
+			(joy_data[0] + 1) * 4,
+			(-joy_data[1] + 1) * 4
 		};
 	//Write: to Screen
         LedmatClearBuffer();
