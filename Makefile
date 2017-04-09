@@ -63,7 +63,7 @@ CC_FLAGS += -ffunction-sections -fdata-sections -Wall -Wstrict-prototypes
 CC_FLAGS += $(patsubst %,-I%,$(INCLUDE_DIR)) -I.
 
 LD_FLAGS  = $(ARCH) $(FP)
-LD_FLAGS += -L$(OPENCM3_DIR)/lib -L$(LDSCRIPT_DIR) -T$(LDSCRIPT) -lopencm3_stm32f4
+LD_FLAGS += -L$(OPENCM3_DIR)/lib -L$(LDSCRIPT_DIR) -T$(LDSCRIPT) -lopencm3_stm32f4 -lm
 LD_FLAGS += --static -nostartfiles
 LD_FLAGS += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 
