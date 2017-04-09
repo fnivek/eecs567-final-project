@@ -5,7 +5,7 @@
 #include "ledmat.h"
 #include "game0.h"
 
-enum states {S_MAIN,S_GAME0,S_GAME1,S_GAME2,S_END};
+enum states {S_GAME0,S_GAME1,S_GAME2,S_END};
 enum events {E_NEXT, E_LAUNCH, E_NOTHING, E_END};
 
 void UponEnter( int State);
