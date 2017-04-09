@@ -21,6 +21,7 @@ classdef ArmLink < handle
             set(obj.portStream,'Port',obj.portName);
             set(obj.portStream,'OutputBufferSize',5120);
             set(obj.portStream,'InputBufferSize',5120);
+            set(obj.portStream,'Timeout',2);
             fopen(obj.portStream);
             
             % Start the stream
@@ -28,7 +29,11 @@ classdef ArmLink < handle
         end
         
         function close(obj)
-            fread(obj.portStream);
+            nAvailable = get(obj.portStream, 'BytesAvailable');
+            
+            if nAvailable > 0
+                fread(obj.portStream);
+            end
             fclose(obj.portStream);
         end
         
