@@ -1,11 +1,11 @@
 #include "game0.h"
 
 // Global vars
-float jold[3];
+float jold[3] = {0, 8, 0};
 
 // Global const
 const float kGame0Stepsize = .05;
-const float kZmag = 0.001; // kZmag gets multiplied by kGame0Stepsize so scale appropriatly
+const float kZmag = 0.5; // kZmag gets multiplied by kGame0Stepsize so scale appropriatly
 		
 void game0(void) {
 	//Read: Joystick
@@ -24,6 +24,7 @@ void game0(void) {
 			round((joy_data[1] + 1) * 4)
 		};
 	//Write: to Screen
+        LedmatClearBuffer();
 		LedmatDrawPixel(led_coord, LEDMAT_LED_GREEN);
 		LedmatRefreshDisplay();
 

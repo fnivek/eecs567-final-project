@@ -14,6 +14,7 @@
 #include "wii.h"
 #include "matlab_comms.h"
 #include "kinematics.h"
+#include "sm_main.h"
 
 void SetupBoard(void);
 void Run(void);

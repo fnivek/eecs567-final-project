@@ -2,7 +2,9 @@
 
 // Globals
 int launch = 0;
-int Current_State = S_MAIN;
+uint8_t last_zbut = 0;
+uint8_t last_cbut = 0;
+int Current_State = S_GAME0;
 
 void sm_main(void)
 {
@@ -28,8 +30,10 @@ int ReadInput()
 {
     NunchuckData data;
     ReadWii(&data);
-    uint8_t zbut = data.button_z;
-    uint8_t cbut = data.button_c;
+    uint8_t zbut = (!data.button_z) && last_zbut;
+    uint8_t cbut = (!data.button_c) && last_cbut;
+    last_zbut = data.button_z;
+    last_cbut = data.button_c;
     if(zbut == 1){
 		return E_NEXT;
 	}else if(cbut == 1) {
@@ -45,15 +49,6 @@ void StateMachine(int event)
     int Next_State = Current_State;
     switch ( Current_State )
     {
-    case S_MAIN:
-        switch (event )
-        {
-            // A transition to the next state will occur here
-            case E_NEXT:
-            	Next_State = S_GAME0;
-                break;
-        }
-        break;
     case S_GAME0:
         switch (event )
         {
@@ -83,7 +78,7 @@ void StateMachine(int event)
         {
             // A transition to the next state will occur here
             case E_NEXT:
-            	Next_State = S_MAIN;
+            	Next_State = S_GAME0;
                 break;
             case E_LAUNCH:
 				launch = 1;
@@ -108,8 +103,6 @@ void UponEnter( int State)
 {
     switch (State)
     {
-    case S_MAIN:
-		break;
     case S_GAME0:
 		break;
     case S_GAME1:
@@ -123,17 +116,18 @@ void ActionWhileInState( int State)
 {
     switch (State)
     {
-    case S_MAIN:
-		break;
     case S_GAME0:
+        LedmatClearBuffer();
 		LedmatDrawNumber(0, LEDMAT_LED_RED);
 		LedmatRefreshDisplay();
 		break;
     case S_GAME1:
+        LedmatClearBuffer();
 		LedmatDrawNumber(1, LEDMAT_LED_RED);
 		LedmatRefreshDisplay();
 		break;
     case S_GAME2:
+        LedmatClearBuffer();
 		LedmatDrawNumber(2, LEDMAT_LED_RED);
 		LedmatRefreshDisplay();
 		break;
@@ -144,13 +138,17 @@ void UponExit( int State)
 {
     switch (State)
     {
-    case S_MAIN:
-		break;
     case S_GAME0:
+        LedmatClearBuffer();
+        LedmatRefreshDisplay();
 		break;
     case S_GAME1:
+        LedmatClearBuffer();
+        LedmatRefreshDisplay();
 		break;
 	case S_GAME2:
+        LedmatClearBuffer();
+        LedmatRefreshDisplay();
 		break;
     }
 }
