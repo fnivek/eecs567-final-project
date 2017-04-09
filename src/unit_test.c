@@ -249,8 +249,9 @@ int8_t TestWii(void) {
 		UsbWriteString("\nPress c on the wii nunchuck or send s to skip\n");
 	}
 
-	NunchuckData data = ReadWii();
-	if(!data.fields.button_c) {
+	NunchuckData data;
+	ReadWii(&data);
+	if(!data.button_c) {
 		UsbWriteString("c was pressed!\n");
 		return 1;
 	} else if(CheckUsbBuf("s")) {

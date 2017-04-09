@@ -28,6 +28,9 @@ void SetupBoard(void) {
 
 	// Enable kinematics
 	KinematicsSetControlEnable(1);
+
+	// Start state machine
+	AddSystickCallback((VoidCB)sm_main, 20);
 }
 
 void Run(void) {
