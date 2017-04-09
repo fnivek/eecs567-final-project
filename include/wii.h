@@ -11,6 +11,14 @@
 #define WII_CMD_DATA_READ   0x00
 #define WII_DATA_LENGTH     6
 
+#define WII_JOY_X_MIN		36
+#define WII_JOY_X_ZERO		134
+#define WII_JOY_X_MAX		234
+#define WII_JOY_Y_MIN		29
+#define WII_JOY_Y_ZERO		127
+#define WII_JOY_Y_MAX		218
+
+// Union type for reading and parsing raw data from device
 typedef union {
     uint8_t buf[WII_DATA_LENGTH];
     struct {
@@ -28,10 +36,21 @@ typedef union {
         uint16_t accel_y_low : 2;
         uint16_t accel_z_low : 2;
     } fields;
+} _NunchuckData;
+
+// Public struct type for consumation of data
+typedef struct {
+	float joy_x;
+	float joy_y;
+	uint16_t accel_x;
+	uint16_t accel_y;
+	uint16_t accel_z;
+	uint8_t button_z;
+	uint8_t button_c;
 } NunchuckData;
 
 void SetupWii(void);
 
-NunchuckData ReadWii(void);
+uint8_t ReadWii(NunchuckData* retData);
 
 #endif
