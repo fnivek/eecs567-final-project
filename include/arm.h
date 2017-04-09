@@ -35,7 +35,7 @@ typedef struct {
 static const ArmSegment Arm[ARM_NJOINTS] = {
 	// offset,		dir,	theta,		d,			a,			alpha
 	{0.0000,		-1,		0.0000,		1.0000,		0.0000,		-M_PI / 2},	// Base
-	{0.0000,		-1,		-M_PI / 2,	1.5000,		6.0000,		0.0000},	// Shoulder
+	{0.0000,		1,		-M_PI / 2,	1.5000,		6.0000,		0.0000},	// Shoulder
 	{0.0000,		-1,		0.0000,		-1.5000,	6.0000,		0.0000},	// Elbow
 	{0.0000,		-1,		0.0000,		0.0000,		0.0000,		0.0000}		// Wrist
 };
