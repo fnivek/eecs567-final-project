@@ -136,7 +136,7 @@ void KinematicsAdvanceControl(void) {
 		SumV3V3(angles, dq, q);
 
 		// Calculate the upright position of the led matrix
-		float q_wrist = -q[kElbow] - q[kShoulder];
+		float q_wrist = q[kElbow] + q[kShoulder];
 
 		// Update new joint angles
 		float cat_q[4] = {q[kBase], q[kShoulder], q[kElbow], q_wrist};
