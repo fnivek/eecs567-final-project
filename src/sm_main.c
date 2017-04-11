@@ -17,10 +17,10 @@ void sm_main(void)
 				game0();
 			break;
             case S_GAME1:
-				//game1();
+				game1();
 			break;
 			case S_GAME2:
-				//game2();
+				game2();
 			break;
         }
 	}
